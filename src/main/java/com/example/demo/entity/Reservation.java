@@ -13,11 +13,13 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    //지연 로딩
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 
-    @ManyToOne
+    //지연 로딩
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -25,12 +27,13 @@ public class Reservation {
 
     private LocalDateTime endAt;
 
-    private String status; // PENDING, APPROVED, CANCELED, EXPIRED
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus status; // PENDING, APPROVED, CANCELED, EXPIRED
 
     public Reservation(Item item, User user, String status, LocalDateTime startAt, LocalDateTime endAt) {
         this.item = item;
         this.user = user;
-        this.status = status;
+        this.status = ReservationStatus.PENDING;
         this.startAt = startAt;
         this.endAt = endAt;
     }
@@ -38,6 +41,6 @@ public class Reservation {
     public Reservation() {}
 
     public void updateStatus(String status) {
-        this.status = status;
+        this.status = ReservationStatus.valueOf(status);
     }
 }

@@ -11,13 +11,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+public interface ReservationRepository extends JpaRepository<Reservation, Long>, ReservationCustomRepository {
 
-    List<Reservation> findByUserIdAndItemId(Long userId, Long itemId);
+//    List<Reservation> findByUserIdAndItemId(Long userId, Long itemId);
+//
+//    List<Reservation> findByUserId(Long userId);
+//
+//    List<Reservation> findByItemId(Long itemId);
 
-    List<Reservation> findByUserId(Long userId);
+    default Reservation findByReservationId(long reservationId) {
 
-    List<Reservation> findByItemId(Long itemId);
+        return findById(reservationId).orElseThrow(() -> new IllegalArgumentException("해당 ID에 맞는 데이터가 존재하지 않습니다."));
+    }
 
     @Query("SELECT r FROM Reservation r " +
             "WHERE r.item.id = :id " +
